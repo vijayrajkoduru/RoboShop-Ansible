@@ -1,0 +1,5 @@
+- name: comfiguring monogodb server
+  become: yes
+  host: monogodb
+  tasks:
+    
