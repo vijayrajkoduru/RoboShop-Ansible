@@ -1,6 +1,6 @@
-- name: comfiguring monogodb server
+- name: configuring mongodb server
   become: yes
-  hosts: monogodb
+  hosts: mongodb
   tasks:
   - name: copy mongodb repo
     ansible.builtin.copy:
@@ -13,8 +13,8 @@
       state: present
 
   - name: start and enable mongodb
-    ansible.builtin.sergver:
-      name: mongodb
+    ansible.builtin.service:
+      name: mongod
       state: started
       enabled: yes
     
