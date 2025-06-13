@@ -47,7 +47,7 @@
 
   - name: systemctl deamon reload
     ansible.builtin.systemd_service:
-      deamon_reload: true
+      daemon_reload: true
     
   - name: start and enable catalogue
     ansible.builtin.service:
@@ -66,7 +66,7 @@
       state: present
 
   - name: check products loaded or not
-    ansible.builtin.command: mongosh --host mongodb.daws84s.site --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
+    ansible.builtin.command: mongosh --host mongodb.vrushaba.shop --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
     register: catalogue_output
 
   - name: print catalogue output
