@@ -5,14 +5,14 @@
   - name: disable default nodejs
     ansible.builtin.command: dnf module disable nodejs -y
 
-  - name: disable default nodejs
+  - name: enable nodejs:20
     ansible.builtin.command: dnf module enable nodejs:20 -y
 
   - name: Install nodejs
     ansible.builtin.dnf:
       name: nodejs
       state: present
-  
+      
   - name: create app directory
     ansible.builtin.file:
       path: /app
@@ -27,19 +27,21 @@
 
   - name: download catalogue code
     ansible.builtin.get_url:
-      url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
+      url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
       dest: /tmp/catalogue.zip
 
-  - name:  extract catalogue code
+  # this module thinks file exist on ansible control server, needs to extract on to remote machine
+  # remote_src: yes means files already exist in catalogue server
+  - name: extract catalogue code
     ansible.builtin.unarchive:
-      src:  /tmp/catalogue.zip 
+      src: /tmp/catalogue.zip
       dest: /app
       remote_src: yes
 
   - name: install dependencies
     community.general.npm:
       path: /app
-    
+
   - name: copy catalogue service to system directory
     ansible.builtin.copy:
       src: catalogue.service
@@ -48,7 +50,7 @@
   - name: systemctl deamon reload
     ansible.builtin.systemd_service:
       daemon_reload: true
-    
+
   - name: start and enable catalogue
     ansible.builtin.service:
       name: catalogue
@@ -66,7 +68,7 @@
       state: present
 
   - name: check products loaded or not
-    ansible.builtin.command: mongosh --host mongodb.vrushaba.shop --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
+    ansible.builtin.command: mongosh --host mongodb.daws84s.site --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
     register: catalogue_output
 
   - name: print catalogue output
@@ -74,5 +76,6 @@
       msg: "{{ catalogue_output }}"
 
   - name: load products
-    ansible.builtin.shell: mongosh --host mongodb.vrushaba.shop < /app/db/master-data.js
+    ansible.builtin.shell: mongosh --host mongodb.daws84s.site < /app/db/master-data.js
     when: catalogue_output.stdout | int < 0
+  
