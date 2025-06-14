@@ -16,7 +16,7 @@
   - name: start and enable nginx
     ansible.builtin.service:
       name: nginx
-      state:  started
+      state: started
       enabled: yes
 
   - name: remove html directory
