@@ -8,9 +8,9 @@
   - name: enable default nodejs
     ansible.builtin.command: dnf module enable nodejs:20 -y
 
-  - name: Install nodeis
+  - name: Install nodejs
     ansible.builtin.dnf:
-      name: nodeis
+      name: nodejs
       state: present
     
   - name: create a robosop system user
@@ -37,11 +37,12 @@
       remote_src: yes
   
   - name: install dependencies
-    community.general.nmp:
+    community.general.npm:
       path: /app
 
   - name: copy user service to system die
     ansible.builtin.copy:
+      src: user.service
       path: /etc/systemd/system/user.service
 
   - name: systemctl deamon reload
